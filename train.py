@@ -7,7 +7,6 @@ from torch.utils.data import DataLoader
 import torch.nn as nn
 import torch.optim as optim
 import config
-from tqdm import tqdm
 from torchvision.utils import save_image
 from discriminator_model import Discriminator
 from generator_model import Generator
@@ -46,13 +45,17 @@ def main():
     g_scaler = torch.cuda.amp.GradScaler()
     d_scaler = torch.cuda.amp.GradScaler()
 
+    out = dict()
     for epoch in range(config.NUM_EPOCHS):
 
         X_reals = 0
         X_fakes = 0
-        loop = tqdm(loader, leave=False)
+        out['epoch'] = epoch
+        out['D_loss'] = 0
+        out['loss_G_Y'] = 0
+        out['PatchNCE_loss'] = 0
 
-        for idx, (X, Y) in enumerate(loop):
+        for idx, (X, Y) in enumerate(loader):
             Y = Y.to(config.DEVICE)
             X = X.to(config.DEVICE)
 
@@ -127,8 +130,11 @@ def main():
                 save_image(Y * 0.5 + 0.5, f"saved_images_{name}/Y_{idx}.png")
                 save_image(fake_Y * 0.5 + 0.5, f"saved_images_{name}/fake_Y_{idx}.png")
                 save_image(rec_Y * 0.5 + 0.5, f"saved_images_{name}/rec_Y_{idx}.png")
-
-            loop.set_postfix(X_real=X_reals / (idx + 1), X_fake=X_fakes / (idx + 1))
+                print(out)
+            else:
+                out['D_loss'] = D_loss.item()
+                out['loss_G_Y'] = loss_G_Y.item()
+                # out['PatchNCE_loss'] = PatchNCE_loss.item()
 
         if epoch % 5 == 0 and config.SAVE_MODEL:
             save_checkpoint(F, opt_gen, filename=config.CHECKPOINT_F)

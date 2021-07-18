@@ -6,7 +6,7 @@ from utils import save_checkpoint, load_checkpoint
 from torch.utils.data import DataLoader
 import torch.nn as nn
 import torch.optim as optim
-import config
+import config_test as config
 from tqdm import tqdm
 from torchvision.utils import save_image
 from discriminator_model import Discriminator
@@ -34,10 +34,11 @@ def main():
     mse = nn.MSELoss()
 
     if config.LOAD_MODEL:
-        load_checkpoint(config.CHECKPOINT_F, F, opt_gen, config.LEARNING_RATE,)
-        load_checkpoint(config.CHECKPOINT_G, G, opt_gen, config.LEARNING_RATE,)
-        load_checkpoint(config.CHECKPOINT_D_X, D_X, opt_disc, config.LEARNING_RATE,)
-        load_checkpoint(config.CHECKPOINT_D_Y, D_Y, opt_disc, config.LEARNING_RATE,)
+        name = config.NAME
+        load_checkpoint(f"saved_images_{name}/f.pth", F, opt_gen, config.LEARNING_RATE,)
+        load_checkpoint(f"saved_images_{name}/g.pth", G, opt_gen, config.LEARNING_RATE,)
+        load_checkpoint(f"saved_images_{name}/d_x.pth", D_X, opt_disc, config.LEARNING_RATE,)
+        load_checkpoint(f"saved_images_{name}/d_y.pth", D_Y, opt_disc, config.LEARNING_RATE,)
 
     dataset = XYDataset(root_X=config.TRAIN_DIR_X, root_Y=config.TRAIN_DIR_Y, transform=config.transforms)
     val_dataset = XYDataset(root_X=config.VAL_DIR_X, root_Y=config.VAL_DIR_Y, transform=config.transforms)

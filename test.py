@@ -53,11 +53,15 @@ def main():
         Y = Y.to(config.DEVICE)
         X = X.to(config.DEVICE)
         fake_X = F(Y)
+        rec_Y = G(fake_X)
         fake_Y = G(X)
+        rec_X = F(fake_Y)
         save_image(X * 0.5 + 0.5, f"datasets/horse2zebra/X/X_{idx}.png")
         save_image(Y * 0.5 + 0.5, f"datasets/horse2zebra/Y/Y_{idx}.png")
         save_image(fake_X * 0.5 + 0.5, f"datasets/horse2zebra/fake_X/X_{idx}.png")
         save_image(fake_Y * 0.5 + 0.5, f"datasets/horse2zebra/fake_Y/Y_{idx}.png")
+        save_image(rec_X * 0.5 + 0.5, f"datasets/horse2zebra/rec_X/X_{idx}.png")
+        save_image(rec_Y * 0.5 + 0.5, f"datasets/horse2zebra/rec_Y/Y_{idx}.png")
 
 
 if __name__ == "__main__":

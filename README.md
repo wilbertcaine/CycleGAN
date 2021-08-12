@@ -19,9 +19,9 @@ _Image-to-image translation is a class of vision and graphics problems where the
 
 ## Train/Test
 
-- Download a CycleGAN dataset (e.g. maps):
+- Download a CycleGAN dataset (e.g. horse2zebra):
 ```bash
-bash ./datasets/download_cyclegan_dataset.sh maps
+bash ./datasets/download_cyclegan_dataset.sh horse2zebra
 ```
 
 - Train a model:
